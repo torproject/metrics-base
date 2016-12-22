@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE project [
+       <!ENTITY base SYSTEM "src/build/java/base.xml">
+]>
+
+<!-- Start of section that needs some edits. -->
+<!-- 'XXXX' marks places for edits. -->
+<project default="usage" name="XXXX" basedir=".">
+
+  <property name="javadoc-title" value="XXXX API Documentation"/>
+  <property name="implementation-title" value="XXXX" />
+  <property name="release.version" value="XXXX" />
+
+  <!-- Name to appear in jar names etc. -->
+  <property name="name" value="XXXX"/>
+
+  <!-- If 'project-main-class' is not provided, a library jar is created. -->
+  <property name="project-main-class" value="XXXX" />
+
+  <!-- Additional includes from ${resources} -->
+  <property name="jarincludes" value="XXXX" />
+
+  <!-- XXXX Has to be provided for each project. -->
+  <target name="coverage-check">
+    <cobertura-check totallinerate="100" totalbranchrate="100" >
+      <!-- example regexes 
+      <regex pattern="org.torproject.abc.xyz.*"
+             branchrate="87" linerate="73"/>
+      -->
+    </cobertura-check>
+  </target>
+
+  <!-- XXXX Add specific dependencies. -->
+  <patternset id="runtime" >
+    <!-- examples
+      <include name="logback-core-1.1.2.jar" />
+      <include name="logback-classic-1.1.2.jar" />
+      <include name="slf4j-api-1.7.7.jar" />
+    -->
+  </patternset>
+  <!-- End of section that needs some edits. -->
+
+  <!-- The following line adds the common targets and properties
+       for Metrics' Java Projects.
+  -->
+  &base;
+
+</project>
+
