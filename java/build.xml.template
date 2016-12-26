@@ -18,8 +18,13 @@
   <!-- If 'project-main-class' is not provided, a library jar is created. -->
   <property name="project-main-class" value="XXXX" />
 
-  <!-- Additional includes from ${resources} -->
+  <!-- Additional includes from ${resources};
+       space separated list of files.-->
   <property name="jarincludes" value="XXXX" />
+
+  <!-- Pattern for jar library includes.
+       jar task uses 'runtime', if not set. -->
+  <property name="jarpatterprop" value="XXXX" />
 
   <!-- XXXX Has to be provided for each project. -->
   <target name="coverage-check">

@@ -29,6 +29,7 @@
   <property name="release.tarball"
             value="${dist}/${name}-${release.version}.tar.gz" />
   <property file="build.properties" />
+  <property name="emptymanifest" value="${generated}/emptymanifest" />
 
   <!-- generic path definitions -->
   <path id="classpath">
@@ -99,7 +100,7 @@
     <echo message="'docs' create all javadoc in ${docs}." />
     <echo message="'checks' Checkstyle checks (see ${generated}/checkstyle_report.txt)." />
     <echo message="'coverage' Cobertura coverage check ${coverageresult}." />
-    <echo message="'signjar' Creates distribution in ${dist}." />
+    <echo message="'tar' Creates a release tarball in ${dist}." />
   </target>
 
   <target name="submoduleupdate" >
@@ -118,6 +119,7 @@
     <mkdir dir="${testresult}"/>
     <mkdir dir="${instrument}"/>
     <mkdir dir="${signed}"/>
+    <manifest file="${emptymanifest}" />
   </target>
 
   <target name="compile"
@@ -216,14 +218,50 @@
     </exec>
   </target>
 
+  <patternset id="base.jar" >
+    <patternset refid="runtime" />
+  </patternset>
+  <patternset id="empty" excludes="*"/>
   <target name="jar" depends="compile,docs,gitrev" >
-    <antcall target="jarexe" />
-    <antcall target="jarlib" />
-    <antcall target="jaradditional" />
+    <property name="manifestattributes" value="${generated}/additional" />
+    <manifest file="${manifestattributes}" >
+      <attribute name="Main-Class" value="${project-main-class}" />
+    </manifest>
+    <condition property="manifestfile"
+               value="${manifestattributes}"
+               else="${emptymanifest}" >
+        <isset property="project-main-class"/>
+    </condition>
+    <condition property="jarpattern"
+               value="${jarpatternprop}"
+               else="runtime" >
+        <isset property="jarpatternprop"/>
+    </condition>
+    <antcall target="jarring" >
+      <param name="destfile" value="${dist}/${jarfile}" />
+      <param name="usepath" value="${libs}" />
+      <param name="usepattern" value="${jarpattern}" />
+      <param name="usebase" value="${classes}" />
+    </antcall>
+    <property name="manifestfile" value="${emptymanifest}" />
+    <antcall target="jarring" >
+      <param name="destfile" value="${dist}/${jarsourcesfile}" />
+      <param name="usepath" value="${libs}" />
+      <param name="usepattern" value="empty" />
+      <param name="usebase" value="${basedir}/src" />
+    </antcall>
+    <antcall target="jarring" >
+      <param name="destfile" value="${dist}/${jardocsfile}" />
+      <param name="usepath" value="${libs}" />
+      <param name="usepattern" value="empty" />
+      <param name="usebase" value="${docs}" />
+    </antcall>
   </target>
 
-  <target name="jarexe" if="project-main-class">
-    <jar destfile="${dist}/${jarfile}" basedir="${classes}">
+  <target name="jarring" >
+    <jar destfile="${destfile}"
+         basedir="${usebase}"
+         manifest="${manifestfile}" >
       <fileset dir="${resources}" includes="${jarincludes}" />
       <restrict>
         <not>
@@ -231,8 +269,8 @@
         </not>
         <archives>
           <zips>
-            <fileset dir="${libs}">
-              <patternset refid="runtime" />
+            <fileset dir="${usepath}">
+              <patternset refid="${usepattern}" />
             </fileset>
           </zips>
         </archives>
@@ -243,46 +281,16 @@
         <attribute name="Implementation-Title" value="${implementation-title}"/>
         <attribute name="Implementation-Version"
                    value="${release.version}-${git.revision}"/>
-        <attribute name="Main-Class" value="${project-main-class}" />
       </manifest>
     </jar>
   </target>
 
-  <target name="jarlib" unless="project-main-class">
-    <jar destfile="${dist}/${jarfile}" basedir="${classes}">
-      <manifest>
-        <attribute name="Created-By" value="The Tor Project" />
-        <attribute name="Implementation-Title" value="${implementation-title}"/>
-        <attribute name="Implementation-Version"
-                   value="${release.version}-${git.revision}"/>
-        <attribute name="Main-Class" value="${project-main-class}" />
-      </manifest>
-    </jar>
-  </target>
-
-  <target name="jaradditional" >
-    <jar destfile="${dist}/${jarsourcesfile}">
-      <fileset dir="${sources}" />
-      <fileset dir="${testsources}"/>
-      <manifest>
-        <attribute name="Created-By" value="The Tor Project" />
-        <attribute name="Implementation-Title" value="${implementation-title}"/>
-        <attribute name="Implementation-Version"
-                   value="${release.version}-${git.revision}"/>
-      </manifest>
-    </jar>
-    <jar destfile="${dist}/${jardocsfile}">
-      <fileset dir="${docs}" />
-      <manifest>
-        <attribute name="Created-By" value="The Tor Project" />
-        <attribute name="Implementation-Title" value="${implementation-title}"/>
-        <attribute name="Implementation-Version"
-                   value="${release.version}-${git.revision}"/>
-      </manifest>
-    </jar>
-  </target>
-
-  <target name="signjar" depends="jar">
+  <target name="signall" depends="jar">
+    <condition property="tobesigned"
+               value="${jarfile} ${jarsourcesfile} ${jardocsfile} ${additional2sign}"
+               else="${jarfile} ${jarsourcesfile} ${jardocsfile}" >
+        <isset property="additional2sign"/>
+    </condition>
     <signjar alias="${jarsigner.alias}"
              storepass="${jarsigner.storepass}"
              sigalg="SHA256withRSA"
@@ -292,16 +300,22 @@
              lazy="true">
       <path>
         <fileset dir="${dist}"
-                 includes="${jarfile} ${jarsourcesfile} ${jardocsfile}"/>
+                 includes="${tobesigned}"/>
       </path>
     </signjar>
-    <fail message="Signing failed." >
+    <fail message="Signing of at least one of ${tobesigned} failed." >
       <condition>
         <not>
           <and>
             <issigned file="${signed}/${jarfile}"/>
             <issigned file="${signed}/${jarsourcesfile}"/>
             <issigned file="${signed}/${jardocsfile}"/>
+            <or>
+              <issigned file="${signed}/${additional2sign}"/>
+              <not>
+                <isset property="additional2sign"/>
+              </not>
+            </or>
           </and>
         </not>
       </condition>
@@ -309,12 +323,10 @@
 
   </target>
 
-  <target name="tar" depends="signjar">
+  <target name="tar" depends="signall">
     <tar destfile="${release.tarball}" compression="gzip">
       <tarfileset dir="." prefix="${name}-${release.version}">
-        <include name="${signed}/${jarfile}" />
-        <include name="${signed}/${jarsourcesfile}" />
-        <include name="${signed}/${jardocsfile}" />
+        <include name="${signed}/*" />
         <include name="build.xml" />
         <include name="LICENSE" />
         <include name="CERT" />
@@ -341,6 +353,9 @@
     <junit fork="true" haltonfailure="false" printsummary="on">
       <sysproperty key="net.sourceforge.cobertura.datafile"
                    file="${cobertura.ser.file}" />
+      <jvmarg value="-DLOGBASE=${generated}/testcoverage-logs"/>
+      <jvmarg value="-Djava.security.policy=${buildresources}/junittest.policy"/>
+      <jvmarg value="-Djava.security.manager"/>
       <classpath refid="cobertura.test.classpath" />
       <formatter type="xml" />
       <batchtest toDir="${testresult}" >
