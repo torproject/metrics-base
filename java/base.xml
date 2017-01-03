@@ -28,6 +28,8 @@
             value="${dist}/${name}-${release.version}.tar.gz" />
   <property file="build.properties" />
   <property name="emptymanifest" value="${generated}/emptymanifest" />
+  <property name="javadocstyle" value="${basedir}/src/build/java/stylesheet.css" />
+  <property name="javadocicon" value="${basedir}/src/build/java/tor-onion.png" />
 
   <!-- generic path definitions -->
   <path id="classpath">
@@ -156,6 +158,7 @@
               timezone="UTC" />
     </tstamp>
     <javadoc destdir="${docs}"
+             stylesheetfile="${javadocstyle}"
              footer="&amp;copy; ${copyyear} The Tor Project"
              doctitle="${javadoc-title}"
              overview="${basedir}/${resources}/overview.html"
@@ -166,6 +169,7 @@
         <exclude name="${javadoc-excludes}"/>
       </fileset>
     </javadoc>
+    <copy file="${javadocicon}" todir="${docs}"/>
   </target>
 
   <target name="test" depends="compile,testcompile">
