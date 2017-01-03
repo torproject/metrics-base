@@ -10,7 +10,6 @@
   <property name="dist" value="${generated}/dist"/>
   <property name="signed" value="${dist}/signed"/>
   <property name="classes" value="${generated}/classes/"/>
-  <property name="source-and-target-java-version" value="1.7" />
   <property name="docs" value="${generated}/javadoc"/>
   <property name="testsources" value="src/test/java"/>
   <property name="testresources" value="src/test/resources/"/>
@@ -18,7 +17,6 @@
   <property name="coverageresult" value="${generated}/coverage-report/"/>
   <property name="instrument" value="${generated}/instrument/"/>
   <property name="testclasses" value="${generated}/testclasses/"/>
-  <property name="libs" value="lib"/>
   <property name="cobertura.ser.file" value="${basedir}/cobertura.ser" />
   <property name="jarfile" value="${name}-${release.version}.jar" />
   <property name="jarsourcesfile"
@@ -94,13 +92,13 @@
 
   <target name="usage">
     <echo message="The main ant targets are:" />
-    <echo message="'clean' Remove all generated files." />
-    <echo message="'compile' compile sources to ${classes}." />
-    <echo message="'test' run all tests (see ${testresult} for results)." />
-    <echo message="'docs' create all javadoc in ${docs}." />
-    <echo message="'checks' Checkstyle checks (see ${generated}/checkstyle_report.txt)." />
-    <echo message="'coverage' Cobertura coverage check ${coverageresult}." />
-    <echo message="'tar' Creates a release tarball in ${dist}." />
+    <echo message="'clean' removes all generated files." />
+    <echo message="'compile' compiles sources to ${classes}." />
+    <echo message="'test' runs all tests (see ${testresult})." />
+    <echo message="'docs' creates all javadoc in ${docs}." />
+    <echo message="'checks' checks coding style (see ${generated}/checkstyle_report.txt)." />
+    <echo message="'coverage' checks coverage (see ${coverageresult})." />
+    <echo message="'tar' creates a release tarball in ${dist}." />
   </target>
 
   <target name="submoduleupdate" >
@@ -152,8 +150,13 @@
   </target>
 
   <target name="docs">
+    <tstamp>
+      <format property="copyyear"
+              pattern="yyyy"
+              timezone="UTC" />
+    </tstamp>
     <javadoc destdir="${docs}"
-             footer="&amp;copy; 2016 The Tor Project"
+             footer="&amp;copy; ${copyyear} The Tor Project"
              doctitle="${javadoc-title}"
              overview="${basedir}/${resources}/overview.html"
              use="true"

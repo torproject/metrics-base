@@ -11,6 +11,11 @@
   <property name="javadoc-title" value="XXXX API Documentation"/>
   <property name="implementation-title" value="XXXX" />
   <property name="release.version" value="XXXX" />
+  <!-- XXXX If this project uses a different java version,
+       uncomment and set the following property.
+       Remove, if this project uses the java version defined in base.xml
+       <property name="source-and-target-java-version" value="1.7" />
+  -->
 
   <!-- Name to appear in jar names etc. -->
   <property name="name" value="XXXX"/>
@@ -23,8 +28,9 @@
   <property name="jarincludes" value="XXXX" />
 
   <!-- Pattern for jar library includes.
+       Remove, if not used.
        jar task uses 'runtime', if not set. -->
-  <property name="jarpatterprop" value="XXXX" />
+  <property name="jarpatternprop" value="XXXX" />
 
   <!-- XXXX Has to be provided for each project. -->
   <target name="coverage-check">
