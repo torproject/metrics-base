@@ -230,11 +230,6 @@
     <manifest file="${manifestattributes}" >
       <attribute name="Main-Class" value="${project-main-class}" />
     </manifest>
-    <condition property="manifestfile"
-               value="${manifestattributes}"
-               else="${emptymanifest}" >
-        <isset property="project-main-class"/>
-    </condition>
     <condition property="jarpattern"
                value="${jarpatternprop}"
                else="runtime" >
@@ -248,7 +243,6 @@
       <param name="uselibpath" value="${libs}" />
       <param name="uselibpattern" value="${jarpattern}" />
     </antcall>
-    <property name="manifestfile" value="${emptymanifest}" />
     <antcall target="jarring" >
       <param name="destfile" value="${dist}/${jarsourcesfile}" />
       <param name="usebase" value="${testsources}" />
@@ -268,6 +262,14 @@
   </target>
 
   <target name="jarring" >
+    <condition property="manifestfile"
+               value="${manifestattributes}"
+               else="${emptymanifest}" >
+      <and>
+        <equals arg1="${destfile}" arg2="${dist}/${jarfile}" />
+        <isset property="project-main-class"/>
+      </and>
+    </condition>
     <jar destfile="${destfile}"
          basedir="${usebase}"
          manifest="${manifestfile}" >
