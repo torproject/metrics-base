@@ -286,7 +286,7 @@
       </restrict>
       <fileset dir="${usepath}" includes="${usepattern}" />
       <manifest>
-        <attribute name="Created-By" value="The Tor Project" />
+        <attribute name="Implemented-By" value="The Tor Project" />
         <attribute name="Implementation-Title" value="${implementation-title}"/>
         <attribute name="Implementation-Version"
                    value="${release.version}-${git.revision}"/>
