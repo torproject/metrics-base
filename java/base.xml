@@ -261,7 +261,7 @@
     <antcall target="jarring" >
       <param name="destfile" value="${dist}/${jardocsfile}" />
       <param name="usebase" value="${docs}" />
-      <param name="usepath" value="${docs}" />
+      <param name="usepath" value="${sources}" />
       <param name="usepattern" value="*" />
       <param name="uselibpath" value="${libs}" />
       <param name="uselibpattern" value="empty" />
