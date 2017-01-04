@@ -28,6 +28,7 @@
             value="${dist}/${name}-${release.version}.tar.gz" />
   <property file="build.properties" />
   <property name="emptymanifest" value="${generated}/emptymanifest" />
+  <property name="tardepends" value="" />
 
   <!-- generic path definitions -->
   <path id="classpath">
@@ -242,22 +243,28 @@
     </condition>
     <antcall target="jarring" >
       <param name="destfile" value="${dist}/${jarfile}" />
-      <param name="usepath" value="${libs}" />
-      <param name="usepattern" value="${jarpattern}" />
       <param name="usebase" value="${classes}" />
+      <param name="usepath" value="${sources}" />
+      <param name="usepattern" value="empty" />
+      <param name="uselibpath" value="${libs}" />
+      <param name="uselibpattern" value="${jarpattern}" />
     </antcall>
     <property name="manifestfile" value="${emptymanifest}" />
     <antcall target="jarring" >
       <param name="destfile" value="${dist}/${jarsourcesfile}" />
-      <param name="usepath" value="${libs}" />
-      <param name="usepattern" value="empty" />
-      <param name="usebase" value="${basedir}/src" />
+      <param name="usebase" value="${testsources}" />
+      <param name="usepath" value="${sources}" />
+      <param name="usepattern" value="**/*.java" />
+      <param name="uselibpath" value="${libs}" />
+      <param name="uselibpattern" value="empty" />
     </antcall>
     <antcall target="jarring" >
       <param name="destfile" value="${dist}/${jardocsfile}" />
-      <param name="usepath" value="${libs}" />
-      <param name="usepattern" value="empty" />
       <param name="usebase" value="${docs}" />
+      <param name="usepath" value="${docs}" />
+      <param name="usepattern" value="*" />
+      <param name="uselibpath" value="${libs}" />
+      <param name="uselibpattern" value="empty" />
     </antcall>
   </target>
 
@@ -272,13 +279,13 @@
         </not>
         <archives>
           <zips>
-            <fileset dir="${usepath}">
-              <patternset refid="${usepattern}" />
+            <fileset dir="${uselibpath}">
+              <patternset refid="${uselibpattern}" />
             </fileset>
           </zips>
         </archives>
       </restrict>
-
+      <fileset dir="${usepath}" includes="${usepattern}" />
       <manifest>
         <attribute name="Created-By" value="The Tor Project" />
         <attribute name="Implementation-Title" value="${implementation-title}"/>
@@ -288,7 +295,7 @@
     </jar>
   </target>
 
-  <target name="signall" depends="jar">
+  <target name="signall" depends="other,jar">
     <condition property="tobesigned"
                value="${jarfile} ${jarsourcesfile} ${jardocsfile} ${additional2sign}"
                else="${jarfile} ${jarsourcesfile} ${jardocsfile}" >
@@ -324,6 +331,10 @@
       </condition>
     </fail>
 
+  </target>
+
+  <target name="other" if="tardepends" >
+    <antcall target="${tardepends}" />
   </target>
 
   <target name="tar" depends="signall">

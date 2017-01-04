@@ -16,6 +16,11 @@
        Remove, if this project uses the java version defined in base.xml
        <property name="source-and-target-java-version" value="1.7" />
   -->
+  <!-- XXXX If the distribution target 'tar' depends on another task,
+       set this property, otherwise remove.
+       The named task will be executed before signing.
+      <property name="tardepends" value="XXXX" />
+  -->
 
   <!-- Name to appear in jar names etc. -->
   <property name="name" value="XXXX"/>
