@@ -28,7 +28,6 @@
             value="${dist}/${name}-${release.version}.tar.gz" />
   <property file="build.properties" />
   <property name="emptymanifest" value="${generated}/emptymanifest" />
-  <property name="tardepends" value="" />
 
   <!-- generic path definitions -->
   <path id="classpath">
