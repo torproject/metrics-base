@@ -242,6 +242,7 @@
       <param name="usepattern" value="empty" />
       <param name="uselibpath" value="${libs}" />
       <param name="uselibpattern" value="${jarpattern}" />
+      <param name="resourceincludes" value="${jarincludes}" />
     </antcall>
     <antcall target="jarring" >
       <param name="destfile" value="${dist}/${jarsourcesfile}" />
@@ -250,6 +251,7 @@
       <param name="usepattern" value="**/*.java" />
       <param name="uselibpath" value="${libs}" />
       <param name="uselibpattern" value="empty" />
+      <param name="resourceincludes" value="X" />
     </antcall>
     <antcall target="jarring" >
       <param name="destfile" value="${dist}/${jardocsfile}" />
@@ -258,6 +260,7 @@
       <param name="usepattern" value="*" />
       <param name="uselibpath" value="${libs}" />
       <param name="uselibpattern" value="empty" />
+      <param name="resourceincludes" value="X" />
     </antcall>
   </target>
 
@@ -273,7 +276,7 @@
     <jar destfile="${destfile}"
          basedir="${usebase}"
          manifest="${manifestfile}" >
-      <fileset dir="${resources}" includes="${jarincludes}" />
+      <fileset dir="${resources}" includes="${resourceincludes}" />
       <restrict>
         <not>
           <name name="META-INF/*" />

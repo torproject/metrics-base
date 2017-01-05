@@ -22,20 +22,22 @@
       <property name="tardepends" value="XXXX" />
   -->
 
-  <!-- Name to appear in jar names etc. -->
+  <!-- Obligatory: Name to appear in jar names etc. -->
   <property name="name" value="XXXX"/>
 
-  <!-- If 'project-main-class' is not provided, a library jar is created. -->
+  <!-- If 'project-main-class' is not provided, a library jar is created.
   <property name="project-main-class" value="XXXX" />
-
+  -->
   <!-- Additional includes from ${resources};
-       space separated list of files.-->
+       space separated list of files.
+       Leave it as XXXX, if there are none. -->
   <property name="jarincludes" value="XXXX" />
 
   <!-- Pattern for jar library includes.
        Remove, if not used.
-       jar task uses 'runtime', if not set. -->
+       jar task uses 'runtime', if not set.
   <property name="jarpatternprop" value="XXXX" />
+  -->
 
   <!-- XXXX Has to be provided for each project. -->
   <target name="coverage-check">
