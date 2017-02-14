@@ -165,9 +165,7 @@
              use="true"
              windowtitle="${javadoc-title}">
       <classpath refid="classpath"/>
-      <fileset dir="${sources}">
-        <exclude name="${javadoc-excludes}"/>
-      </fileset>
+      <fileset dir="${sources}" excludes="${javadoc-excludes}"/>
     </javadoc>
     <copy file="${javadocicon}" todir="${docs}"/>
   </target>
