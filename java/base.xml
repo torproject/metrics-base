@@ -151,16 +151,21 @@
     </javac>
   </target>
 
-  <target name="docs">
+  <target name="docs" depends="gitrev" >
     <tstamp>
       <format property="copyyear"
               pattern="yyyy"
               timezone="UTC" />
     </tstamp>
+    <condition property="headline"
+               value="${implementation-title} ${release.version}.${git.revision} API Documentation"
+               else="${implementation-title} ${release.version} API Documentation" >
+      <contains string="${release.version}" substring="-dev" />
+    </condition>
     <javadoc destdir="${docs}"
              stylesheetfile="${javadocstyle}"
              footer="&amp;copy; ${copyyear} The Tor Project"
-             doctitle="${javadoc-title}"
+             doctitle="${headline}"
              overview="${basedir}/${resources}/overview.html"
              use="true"
              windowtitle="${javadoc-title}">
