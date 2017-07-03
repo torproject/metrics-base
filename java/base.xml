@@ -23,7 +23,7 @@
             value="${name}-${release.version}-sources.jar" />
   <property name="jardocsfile"
             value="${name}-${release.version}-javadoc.jar" />
-  <property name="source-and-target-java-version" value="1.7" />
+  <property name="source-and-target-java-version" value="1.8" />
   <property name="release.tarball"
             value="${dist}/${name}-${release.version}.tar.gz" />
   <property file="build.properties" />
