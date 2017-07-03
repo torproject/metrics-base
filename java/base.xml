@@ -233,6 +233,10 @@
   </patternset>
   <patternset id="empty" excludes="*"/>
   <target name="jar" depends="compile,docs,gitrev" >
+    <propertyfile file="${classes}/build.properties" >
+      <entry key="build.revision"
+             value="${git.revision}" />
+    </propertyfile>
     <property name="manifestattributes" value="${generated}/additional" />
     <manifest file="${manifestattributes}" >
       <attribute name="Main-Class" value="${project-main-class}" />
