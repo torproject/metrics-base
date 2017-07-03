@@ -233,8 +233,8 @@
   </patternset>
   <patternset id="empty" excludes="*"/>
   <target name="jar" depends="compile,docs,gitrev" >
-    <propertyfile file="${classes}/build.properties" >
-      <entry key="build.revision"
+    <propertyfile file="${classes}/${name}.buildrevision.properties" >
+      <entry key="${name}.build.revision"
              value="${git.revision}" />
     </propertyfile>
     <property name="manifestattributes" value="${generated}/additional" />
