@@ -290,7 +290,12 @@
       <fileset dir="${resources}" includes="${resourceincludes}" />
       <restrict>
         <not>
-          <name name="META-INF/*" />
+          <and>
+            <name name="META-INF/*" />
+            <not>
+              <name name="META-INF/services/java.sql.Driver" />
+            </not>
+          </and>
         </not>
         <archives>
           <zips>
