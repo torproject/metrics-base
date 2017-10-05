@@ -310,7 +310,7 @@
     </jar>
   </target>
 
-  <target name="signall" depends="other,jar">
+  <target name="signall" depends="jar,other">
     <condition property="tobesigned"
                value="${jarfile} ${jarsourcesfile} ${jardocsfile} ${additional2sign}"
                else="${jarfile} ${jarsourcesfile} ${jardocsfile}" >
