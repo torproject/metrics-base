@@ -19,6 +19,8 @@
   <property name="testclasses" value="${generated}/testclasses/"/>
   <property name="cobertura.ser.file" value="${basedir}/cobertura.ser" />
   <property name="jarfile" value="${name}-${release.version}.jar" />
+  <property name="jarthinfile"
+            value="${name}-${release.version}-thin.jar" />
   <property name="jarsourcesfile"
             value="${name}-${release.version}-sources.jar" />
   <property name="jardocsfile"
@@ -241,18 +243,22 @@
     <manifest file="${manifestattributes}" >
       <attribute name="Main-Class" value="${project-main-class}" />
     </manifest>
-    <condition property="jarpattern"
-               value="${jarpatternprop}"
-               else="runtime" >
-        <isset property="jarpatternprop"/>
-    </condition>
     <antcall target="jarring" >
       <param name="destfile" value="${dist}/${jarfile}" />
       <param name="usebase" value="${classes}" />
       <param name="usepath" value="${sources}" />
       <param name="usepattern" value="empty" />
       <param name="uselibpath" value="${libs}" />
-      <param name="uselibpattern" value="${jarpattern}" />
+      <param name="uselibpattern" value="runtime" />
+      <param name="resourceincludes" value="${jarincludes}" />
+    </antcall>
+    <antcall target="jarring" >
+      <param name="destfile" value="${dist}/${jarthinfile}" />
+      <param name="usebase" value="${classes}" />
+      <param name="usepath" value="${sources}" />
+      <param name="usepattern" value="empty" />
+      <param name="uselibpath" value="${libs}" />
+      <param name="uselibpattern" value="empty" />
       <param name="resourceincludes" value="${jarincludes}" />
     </antcall>
     <antcall target="jarring" >
@@ -317,8 +323,8 @@
 
   <target name="signall" depends="jar,other">
     <condition property="tobesigned"
-               value="${jarfile} ${jarsourcesfile} ${jardocsfile} ${additional2sign}"
-               else="${jarfile} ${jarsourcesfile} ${jardocsfile}" >
+               value="${jarfile} ${jarthinfile} ${jarsourcesfile} ${jardocsfile} ${additional2sign}"
+               else="${jarfile} ${jarthinfile} ${jarsourcesfile} ${jardocsfile}" >
         <isset property="additional2sign"/>
     </condition>
     <signjar alias="${jarsigner.alias}"
@@ -338,6 +344,7 @@
         <not>
           <and>
             <issigned file="${signed}/${jarfile}"/>
+            <issigned file="${signed}/${jarthinfile}"/>
             <issigned file="${signed}/${jarsourcesfile}"/>
             <issigned file="${signed}/${jardocsfile}"/>
             <or>
