@@ -8,7 +8,6 @@
   <property name="generated" value="generated"/>
   <property name="resources" value="src/main/resources"/>
   <property name="dist" value="${generated}/dist"/>
-  <property name="signed" value="${dist}/signed"/>
   <property name="classes" value="${generated}/classes/"/>
   <property name="docs" value="${generated}/javadoc"/>
   <property name="testsources" value="src/test/java"/>
@@ -120,7 +119,7 @@
     <mkdir dir="${docs}"/>
     <mkdir dir="${testresult}"/>
     <mkdir dir="${instrument}"/>
-    <mkdir dir="${signed}"/>
+    <mkdir dir="${dist}"/>
     <manifest file="${emptymanifest}" />
   </target>
 
@@ -321,56 +320,16 @@
     </jar>
   </target>
 
-  <target name="signall" depends="jar,other">
-    <condition property="tobesigned"
-               value="${jarfile} ${jarthinfile} ${jarsourcesfile} ${jardocsfile} ${additional2sign}"
-               else="${jarfile} ${jarthinfile} ${jarsourcesfile} ${jardocsfile}" >
-        <isset property="additional2sign"/>
-    </condition>
-    <signjar alias="${jarsigner.alias}"
-             storepass="${jarsigner.storepass}"
-             sigalg="SHA256withRSA"
-             destdir="${signed}"
-             digestalg="SHA-256"
-             tsaurl="http://timestamp.digicert.com"
-             lazy="true">
-      <path>
-        <fileset dir="${dist}"
-                 includes="${tobesigned}"/>
-      </path>
-    </signjar>
-    <fail message="Signing of at least one of ${tobesigned} failed." >
-      <condition>
-        <not>
-          <and>
-            <issigned file="${signed}/${jarfile}"/>
-            <issigned file="${signed}/${jarthinfile}"/>
-            <issigned file="${signed}/${jarsourcesfile}"/>
-            <issigned file="${signed}/${jardocsfile}"/>
-            <or>
-              <issigned file="${signed}/${additional2sign}"/>
-              <not>
-                <isset property="additional2sign"/>
-              </not>
-            </or>
-          </and>
-        </not>
-      </condition>
-    </fail>
-
-  </target>
-
   <target name="other" if="tardepends" >
     <antcall target="${tardepends}" />
   </target>
 
-  <target name="tar" depends="signall">
+  <target name="tar" depends="jar,other">
     <tar destfile="${release.tarball}" compression="gzip">
       <tarfileset dir="." prefix="${name}-${release.version}">
-        <include name="${signed}/*" />
+        <include name="${dist}/*" />
         <include name="build.xml" />
         <include name="LICENSE" />
-        <include name="CERT" />
         <include name="*.md" />
       </tarfileset>
       <tarfileset dir="${basedir}/src"
