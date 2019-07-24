@@ -58,7 +58,10 @@
 
   <path id="checkstyle.classpath" >
     <fileset dir="${libs}">
-      <include name="checkstyle-6.17-all.jar" />
+      <include name="antlr4-runtime-4.7.2.jar" />
+      <include name="checkstyle-8.15.jar" />
+      <include name="commons-collections3-3.2.2.jar" />
+      <include name="commons-logging-1.2.jar" />
     </fileset>
   </path>
 
