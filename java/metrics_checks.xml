@@ -20,9 +20,6 @@
 
      - Limit line length to 80 [LineLength].
 
-     - Require the "while" of a do-while statement to start on the same
-       line as the closing brace of the "do" [RightCurly].
-
     Checkstyle is very configurable. Be sure to read the documentation at
     http://checkstyle.sf.net (or in your downloaded distribution).
 
@@ -73,11 +70,7 @@
         <module name="RightCurly"/>
         <module name="RightCurly">
             <property name="option" value="alone"/>
-            <property name="tokens" value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, STATIC_INIT, INSTANCE_INIT"/>
-        </module>
-        <module name="RightCurly">
-            <property name="option" value="same"/>
-            <property name="tokens" value="LITERAL_DO"/>
+            <property name="tokens" value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, LITERAL_DO, STATIC_INIT, INSTANCE_INIT"/>
         </module>
         <module name="WhitespaceAround">
             <property name="allowEmptyConstructors" value="true"/>
