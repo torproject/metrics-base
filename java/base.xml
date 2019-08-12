@@ -13,10 +13,7 @@
   <property name="testsources" value="src/test/java"/>
   <property name="testresources" value="src/test/resources/"/>
   <property name="testresult" value="${generated}/test-results"/>
-  <property name="coverageresult" value="${generated}/coverage-report/"/>
-  <property name="instrument" value="${generated}/instrument/"/>
   <property name="testclasses" value="${generated}/testclasses/"/>
-  <property name="cobertura.ser.file" value="${basedir}/cobertura.ser" />
   <property name="jarfile" value="${name}-${release.version}.jar" />
   <property name="jarthinfile"
             value="${name}-${release.version}-thin.jar" />
@@ -68,35 +65,12 @@
     </fileset>
   </path>
 
-  <path id="cobertura.classpath">
-    <fileset dir="${libs}">
-      <include name="cobertura-2.1.1.jar" />
-      <include name="slf4j-api-1.7.22.jar" />
-      <include name="commons-lang3-3.5.jar" />
-      <include name="asm-5.0.1.jar" />
-      <include name="asm-util-5.0.1.jar" />
-      <include name="asm-tree-5.0.1.jar" />
-      <include name="asm-commons-5.0.1.jar" />
-      <include name="asm-analysis-5.0.1.jar" />
-      <include name="oro-2.0.8.jar" />
-      <include name="logback-core-1.1.9.jar" />
-      <include name="logback-classic-1.1.9.jar" />
-    </fileset>
-  </path>
-
-  <path id="cobertura.test.classpath">
-    <path location="${instrument}" />
-    <path refid="test.classpath" />
-    <path refid="cobertura.classpath" />
-  </path>
-
   <!-- target definitions -->
   
   <target name="clean" >
     <delete includeEmptyDirs="true" quiet="true">
       <fileset dir="${generated}" defaultexcludes="false" includes="**" />
     </delete>
-    <delete file="${cobertura.ser.file}" quiet="true" />
   </target>
 
   <target name="usage">
@@ -107,7 +81,6 @@
     <echo message="'test' runs all tests (see ${testresult})." />
     <echo message="'docs' creates all javadoc in ${docs}." />
     <echo message="'checks' checks coding style (see ${generated}/checkstyle_report.txt)." />
-    <echo message="'coverage' checks coverage (see ${coverageresult})." />
     <echo message="'tar' creates a release tarball in ${dist}." />
   </target>
 
@@ -125,7 +98,6 @@
     <mkdir dir="${testclasses}"/>
     <mkdir dir="${docs}"/>
     <mkdir dir="${testresult}"/>
-    <mkdir dir="${instrument}"/>
     <mkdir dir="${dist}"/>
     <manifest file="${emptymanifest}" />
   </target>
@@ -351,37 +323,5 @@
       <tarfileset dir="${libs}"
                   prefix="${name}-${release.version}/lib" />
     </tar>
-  </target>
-
-  <taskdef classpathref="cobertura.classpath" resource="tasks.properties" />
-  <target name="coverage" depends="compile,testcompile">
-    <delete file="${cobertura.ser.file}" quiet="true" />
-    <copy todir="${instrument}" >
-      <fileset dir="${classes}"/>
-    </copy>
-    <cobertura-instrument ignoreTrivial="true">
-      <fileset dir="${instrument}">
-        <include name="**/**/*.class" />
-      </fileset>
-    </cobertura-instrument>
-    <junit fork="true" haltonfailure="false" printsummary="on">
-      <sysproperty key="net.sourceforge.cobertura.datafile"
-                   file="${cobertura.ser.file}" />
-      <jvmarg value="-DLOGBASE=${generated}/testcoverage-logs"/>
-      <jvmarg value="-Djava.security.policy=${buildresources}/junittest.policy"/>
-      <jvmarg value="-Djava.security.manager"/>
-      <classpath refid="cobertura.test.classpath" />
-      <formatter type="xml" />
-      <batchtest toDir="${testresult}" >
-        <fileset dir="${testclasses}"
-                 includes="**/*Test.class"/>
-      </batchtest>
-    </junit>
-    <cobertura-report format="html" destdir="${coverageresult}" >
-      <fileset dir="${sources}">
-        <include name="**/*.java" />
-      </fileset>
-    </cobertura-report>
-    <antcall target="coverage-check" />
   </target>
 

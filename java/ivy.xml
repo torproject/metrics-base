@@ -21,7 +21,6 @@
 
     <!-- Development tools dependencies that are optional for the build. -->
     <dependency org="com.puppycrawl.tools" name="checkstyle" rev="6.17" />
-    <dependency org="net.sourceforge.cobertura" name="cobertura" rev="2.1.1" />
 
     <!-- Metrics website and web-specific ExoneraTor dependencies. -->
     <dependency org="javax.servlet" name="javax.servlet-api" rev="3.1.0" />
