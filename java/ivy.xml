@@ -46,7 +46,7 @@
     <dependency org="org.rosuda.REngine" name="Rserve" rev="1.8.1" />
 
     <!-- Database dependencies. -->
-    <dependency org="org.postgresql" name="postgresql" rev="9.4.1212" />
+    <dependency org="org.postgresql" name="postgresql" rev="42.2.5" />
 
     <!-- Exclude all source or javadoc artifacts. -->
     <exclude org="*" ext="*" type="source" />
