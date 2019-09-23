@@ -28,6 +28,7 @@
   <property name="emptymanifest" value="${generated}/emptymanifest" />
   <property name="javadocstyle" value="${basedir}/src/build/java/stylesheet.css" />
   <property name="javadocicon" value="${basedir}/src/build/java/tor-onion.png" />
+  <property name="downloadedlibs" value="${generated}/downloaded-libs" />
 
   <!-- generic path definitions -->
   <path id="classpath">
@@ -99,6 +100,7 @@
     <mkdir dir="${docs}"/>
     <mkdir dir="${testresult}"/>
     <mkdir dir="${dist}"/>
+    <mkdir dir="${libs}"/>
     <manifest file="${emptymanifest}" />
   </target>
 
@@ -107,6 +109,20 @@
     <ivy:resolve file="${buildresources}/ivy.xml" />
     <ivy:retrieve />
     <ivy:report todir="${generated}/ivy" />
+  </target>
+
+  <target name="fetch-metrics-lib" depends="init"
+          description="Fetch metrics-lib from dist.torproject.org">
+    <mkdir dir="${downloadedlibs}"/>
+    <get src="https://dist.torproject.org/metrics-lib/${metricslibversion}/metrics-lib-${metricslibversion}.tar.gz"
+         dest="${downloadedlibs}"/>
+    <untar src="${downloadedlibs}/metrics-lib-${metricslibversion}.tar.gz"
+           dest="${libs}" compression="gzip">
+      <patternset>
+        <include name="**/metrics-lib-${metricslibversion}-thin.jar"/>
+      </patternset>
+      <mapper type="flatten"/>
+    </untar>
   </target>
 
   <target name="compile"
