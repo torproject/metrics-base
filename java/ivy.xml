@@ -40,6 +40,7 @@
     <dependency org="org.eclipse.jetty" name="jetty-security" rev="9.2.21.v20170120" />
     <dependency org="org.eclipse.jetty" name="jetty-server" rev="9.2.21.v20170120" />
     <dependency org="org.eclipse.jetty" name="jetty-servlet" rev="9.2.21.v20170120" />
+    <dependency org="org.eclipse.jetty" name="jetty-servlets" rev="9.2.21.v20170120" />
     <dependency org="org.eclipse.jetty" name="jetty-util" rev="9.2.21.v20170120" />
     <dependency org="org.eclipse.jetty" name="jetty-webapp" rev="9.2.21.v20170120" />
     <dependency org="org.eclipse.jetty" name="jetty-xml" rev="9.2.21.v20170120" />
