@@ -17,4 +17,5 @@ grant {
   permission java.lang.RuntimePermission "getProtectionDomain";
   permission java.lang.RuntimePermission "reflectionFactoryAccess";
   permission java.lang.RuntimePermission "setFactory";
+  permission java.nio.file.LinkPermission "hard";
 };
