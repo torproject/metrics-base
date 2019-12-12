@@ -185,8 +185,6 @@
            haltonfailure="true"
            printsummary="on">
       <jvmarg value="-DLOGBASE=${generated}/test-logs"/>
-      <jvmarg value="-Djava.security.policy=${buildresources}/junittest.policy"/>
-      <jvmarg value="-Djava.security.manager"/>
       <classpath refid="test.classpath"/>
       <formatter type="plain" usefile="false"/>
       <batchtest>
