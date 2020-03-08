@@ -1,0 +1,59 @@
+<!-- Default Logback configuration for production and unit tests.
+
+     By default, WARN and ERROR messages are printed out on the console and INFO
+     messages or higher are appended to `logs/metrics.log` or
+     `generated/test-logs/metrics.log`, respectively.
+
+     Configurable options are:
+      - `-DLOGBASE=path/for/logs/` for using a different log directory,
+      - `-DLOGLEVEL=DEBUG` for using a different log level for the log file, and
+      - `-Dlogback.configurationFile=./logback.xml` for using the custom logging
+        configuration file in the current working directory rather than this
+        file.
+-->
+<configuration>
+
+  <!-- Log WARN and ERROR messages to the console. -->
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%date{ISO8601, UTC} %level %logger{20}:%line %msg%n</pattern>
+    </encoder>
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>WARN</level>
+    </filter>
+  </appender>
+
+  <!-- Log to local log file `logs/metrics.log`, with `logs/` being configurable
+       via `-DLOGBASE=path/for/logs/`. Roll over daily, retaining no more than
+       10 days or 1 GiB of total log files. -->
+  <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>${LOGBASE:-logs}/metrics.log</file>
+    <encoder>
+      <pattern>%date{ISO8601, UTC} %level %logger{20}:%line %msg%n</pattern>
+    </encoder>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOGBASE:-logs}/metrics.%d.log</fileNamePattern>
+      <maxHistory>10</maxHistory>
+      <totalSizeCap>1GB</totalSizeCap>
+    </rollingPolicy>
+  </appender>
+
+  <!-- Only print out our own log messages to the console, not those coming from
+       third-party libraries. -->
+  <logger name="org.torproject" >
+    <appender-ref ref="STDOUT" />
+  </logger>
+
+  <!-- Never log anything lower than INFO from known third-party libraries. -->
+  <logger name="org.apache" level="INFO" />
+  <logger name="org.eclipse" level="INFO" />
+
+  <!-- Only log messages on INFO level or higher. This level can be configured
+       via `-DLOGLEVEL=DEBUG`, if DEBUG logs are required. This only affects the
+       log file, not the console which only logs warnings and errors. -->
+  <root level="${LOGLEVEL:-INFO}">
+    <appender-ref ref="FILE" />
+  </root>
+
+</configuration>
+

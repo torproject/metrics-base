@@ -185,6 +185,7 @@
            haltonfailure="true"
            printsummary="on">
       <jvmarg value="-DLOGBASE=${generated}/test-logs"/>
+      <jvmarg value="-Dlogback.configurationFile=${buildresources}/logback.xml" />
       <classpath refid="test.classpath"/>
       <formatter type="plain" usefile="false"/>
       <batchtest>
@@ -295,6 +296,7 @@
          basedir="${usebase}"
          manifest="${manifestfile}" >
       <fileset dir="${resources}" includes="${resourceincludes}" />
+      <fileset dir="${buildresources}" includes="logback.xml" />
       <restrict>
         <not>
           <and>
