@@ -156,7 +156,7 @@
     </javac>
   </target>
 
-  <target name="docs" depends="gitrev" >
+  <target name="docs" depends="gitrev, compile" >
     <tstamp>
       <format property="copyyear"
               pattern="yyyy"
@@ -174,7 +174,10 @@
              overview="${basedir}/${resources}/overview.html"
              use="true"
              windowtitle="${javadoc-title}">
-      <classpath refid="classpath"/>
+      <classpath>
+        <path refid="classpath"/>
+        <pathelement location="${classes}"/>
+      </classpath>
       <fileset dir="${sources}" excludes="${javadoc-excludes}"/>
     </javadoc>
     <copy file="${javadocicon}" todir="${docs}"/>
